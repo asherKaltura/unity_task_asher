@@ -19,7 +19,7 @@ public class ApiTests {
     private String postId = "";
     @BeforeClass
     public void login() {
-        RestAssured.baseURI = "http://localhost:3000";
+        RestAssured.baseURI =ConfigReader.get("base.url");
 
 
         Response loginResponse = given()
