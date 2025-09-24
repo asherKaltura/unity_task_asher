@@ -1,4 +1,4 @@
-name: Maven Tests
+name: Maven Selenium Tests
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -22,18 +22,24 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # Install Google Chrome
+      - name: Install Google Chrome
+        run: |
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+
       # Start Docker Compose
       - name: Start Docker Compose
         run: |
           docker-compose -f docker/docker-compose.yml up -d
           docker ps
 
-      # Wait a few seconds for services to be ready
+      # Wait for services to be ready
       - name: Wait for services
         run: sleep 15
 
       # Run Maven tests
-      - name: Build with Maven
+      - name: Run Selenium tests
         run: mvn -B clean test
 
       # Stop Docker after tests
