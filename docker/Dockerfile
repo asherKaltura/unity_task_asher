@@ -14,8 +14,8 @@ RUN yarn install --frozen-lockfile
 COPY tsconfig.json ./
 COPY src ./src
 COPY prisma ./prisma
-COPY public ./public   # אם יש
-COPY other_dirs ./other_dirs  # אם יש
+COPY public ./public
+COPY other_dirs ./other_dirs
 
 
 RUN npm i -g typescript
