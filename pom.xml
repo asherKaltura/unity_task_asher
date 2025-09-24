@@ -72,7 +72,7 @@
                 <version>3.1.2</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>ui_tests.xml</suiteXmlFile>
+                        <suiteXmlFile>ui_api_tests.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>

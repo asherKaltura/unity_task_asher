@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+<testng-results ignored="0" total="5" passed="5" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2025-09-21T20:41:40 IDT" name="UI Tests Suite" finished-at="2025-09-21T20:42:06 IDT" duration-ms="25197">
+  <suite started-at="2025-09-24T20:55:16 IDT" name="UI API Tests Suite" finished-at="2025-09-24T20:55:38 IDT" duration-ms="21702">
     <groups>
     </groups>
-    <test started-at="2025-09-21T20:41:40 IDT" name="UI Tests" finished-at="2025-09-21T20:42:06 IDT" duration-ms="25197">
+    <test started-at="2025-09-24T20:55:16 IDT" name="UI API Tests" finished-at="2025-09-24T20:55:38 IDT" duration-ms="21702">
+      <class name="tests.ApiTests">
+        <test-method is-config="true" signature="login()[pri:0, instance:tests.ApiTests@54db056b]" started-at="2025-09-24T20:55:33 IDT" name="login" finished-at="2025-09-24T20:55:36 IDT" duration-ms="2736" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- login -->
+        <test-method signature="createPublisher()[pri:1, instance:tests.ApiTests@54db056b]" started-at="2025-09-24T20:55:36 IDT" name="createPublisher" finished-at="2025-09-24T20:55:38 IDT" duration-ms="1357" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createPublisher -->
+        <test-method signature="createPost()[pri:2, instance:tests.ApiTests@54db056b]" started-at="2025-09-24T20:55:38 IDT" name="createPost" finished-at="2025-09-24T20:55:38 IDT" duration-ms="92" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createPost -->
+        <test-method signature="removePost()[pri:4, instance:tests.ApiTests@54db056b]" started-at="2025-09-24T20:55:38 IDT" name="removePost" finished-at="2025-09-24T20:55:38 IDT" duration-ms="66" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- removePost -->
+        <test-method signature="validatePostStatus()[pri:5, instance:tests.ApiTests@54db056b]" started-at="2025-09-24T20:55:38 IDT" name="validatePostStatus" finished-at="2025-09-24T20:55:38 IDT" duration-ms="110" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- validatePostStatus -->
+      </class> <!-- tests.ApiTests -->
       <class name="tests.UITests">
-        <test-method is-config="true" signature="setup()[pri:0, instance:tests.UITests@77888435]" started-at="2025-09-21T20:41:40 IDT" name="setup" finished-at="2025-09-21T20:41:46 IDT" duration-ms="5638" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:tests.UITests@59505b48]" started-at="2025-09-24T20:55:16 IDT" name="setup" finished-at="2025-09-24T20:55:21 IDT" duration-ms="4540" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method signature="testCreatePublisherAndPostUI()[pri:0, instance:tests.UITests@77888435]" started-at="2025-09-21T20:41:46 IDT" name="testCreatePublisherAndPostUI" finished-at="2025-09-21T20:42:05 IDT" duration-ms="18740" status="PASS">
+        <test-method signature="testCreatePublisherAndPostUI()[pri:0, instance:tests.UITests@59505b48]" started-at="2025-09-24T20:55:21 IDT" name="testCreatePublisherAndPostUI" finished-at="2025-09-24T20:55:33 IDT" duration-ms="12401" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testCreatePublisherAndPostUI -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:tests.UITests@77888435]" started-at="2025-09-21T20:42:05 IDT" name="tearDown" finished-at="2025-09-21T20:42:06 IDT" duration-ms="694" status="PASS">
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:tests.UITests@59505b48]" started-at="2025-09-24T20:55:33 IDT" name="tearDown" finished-at="2025-09-24T20:55:33 IDT" duration-ms="347" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDown -->
       </class> <!-- tests.UITests -->
-    </test> <!-- UI Tests -->
-  </suite> <!-- UI Tests Suite -->
+    </test> <!-- UI API Tests -->
+  </suite> <!-- UI API Tests Suite -->
 </testng-results>
