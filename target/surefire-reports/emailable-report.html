@@ -9,14 +9,25 @@
 <table>
 <tr><th>Test</th><th># Passed</th><th># Skipped</th><th># Retried</th><th># Failed</th><th>Time (ms)</th><th>Included Groups</th><th>Excluded Groups</th></tr>
 <tr><th colspan="8">UI API Tests Suite</th></tr>
-<tr><td><a href="#t0">UI API Tests</a></td><td class="num">5</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">21,702</td><td></td><td></td></tr>
+<tr><td><a href="#t0">UI API Tests</a></td><td class="num">4</td><td class="num">0</td><td class="num">0</td><td class="num attn">1</td><td class="num">24,382</td><td></td><td></td></tr>
 </table>
-<table id='summary'><thead><tr><th>Class</th><th>Method</th><th>Start</th><th>Time (ms)</th></tr></thead><tbody><tr><th colspan="4">UI API Tests Suite</th></tr></tbody><tbody id="t0"><tr><th colspan="4">UI API Tests &#8212; passed</th></tr><tr class="passedeven"><td rowspan="4">tests.ApiTests</td><td><a href="#m0">createPost</a></td><td rowspan="1">1758736538081</td><td rowspan="1">92</td></tr><tr class="passedeven"><td><a href="#m1">createPublisher</a></td><td rowspan="1">1758736536723</td><td rowspan="1">1357</td></tr><tr class="passedeven"><td><a href="#m2">removePost</a></td><td rowspan="1">1758736538174</td><td rowspan="1">66</td></tr><tr class="passedeven"><td><a href="#m3">validatePostStatus</a></td><td rowspan="1">1758736538241</td><td rowspan="1">110</td></tr><tr class="passedodd"><td rowspan="1">tests.UITests</td><td><a href="#m4">testCreatePublisherAndPostUI</a></td><td rowspan="1">1758736521231</td><td rowspan="1">12401</td></tr></tbody>
+<table id='summary'><thead><tr><th>Class</th><th>Method</th><th>Start</th><th>Time (ms)</th></tr></thead><tbody><tr><th colspan="4">UI API Tests Suite</th></tr></tbody><tbody id="t0"><tr><th colspan="4">UI API Tests &#8212; failed</th></tr><tr class="failedeven"><td rowspan="1">tests.UITests</td><td><a href="#m0">testCreatePublisherAndPostUI</a></td><td rowspan="1">1758737805974</td><td rowspan="1">16740</td></tr><tr><th colspan="4">UI API Tests &#8212; passed</th></tr><tr class="passedeven"><td rowspan="4">tests.ApiTests</td><td><a href="#m1">createPost</a></td><td rowspan="1">1758737826889</td><td rowspan="1">95</td></tr><tr class="passedeven"><td><a href="#m2">createPublisher</a></td><td rowspan="1">1758737825628</td><td rowspan="1">1261</td></tr><tr class="passedeven"><td><a href="#m3">removePost</a></td><td rowspan="1">1758737826984</td><td rowspan="1">51</td></tr><tr class="passedeven"><td><a href="#m4">validatePostStatus</a></td><td rowspan="1">1758737827036</td><td rowspan="1">83</td></tr></tbody>
 </table>
-<h2>UI API Tests</h2><h3 id="m0">tests.ApiTests#createPost</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
-<h3 id="m1">tests.ApiTests#createPublisher</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
-<h3 id="m2">tests.ApiTests#removePost</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
-<h3 id="m3">tests.ApiTests#validatePostStatus</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
-<h3 id="m4">tests.UITests#testCreatePublisherAndPostUI</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h2>UI API Tests</h2><h3 id="m0">tests.UITests#testCreatePublisherAndPostUI</h3><table class="result"><tr><th>Exception</th></tr><tr><td><div class="stacktrace">org.openqa.selenium.TimeoutException: Expected condition failed: waiting for pages.BasePage$$Lambda$640/0x00000008003b7c40@64dfb31d (tried for 15 second(s) with 500 milliseconds interval)
+Build info: version: &apos;4.16.0&apos;, revision: &apos;15400459dd*&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;11.0.27&apos;
+Driver info: driver.version: unknown
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:261)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:229)
+	at pages.BasePage.doAction(BasePage.java:34)
+	at pages.BasePage.click(BasePage.java:43)
+	at pages.PublisherPage.createPublisher(PublisherPage.java:38)
+	at tests.UITests.testCreatePublisherAndPostUI(UITests.java:30)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+... Removed 31 stack frames</div></td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m1">tests.ApiTests#createPost</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m2">tests.ApiTests#createPublisher</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m3">tests.ApiTests#removePost</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m4">tests.ApiTests#validatePostStatus</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
 </body>
 </html>
