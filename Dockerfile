@@ -11,10 +11,10 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 
-COPY tsconfig.json ./
-COPY src ./src
-COPY prisma ./prisma
-COPY public ./public
+COPY tsconfig.json ./docker
+COPY src ./docker/src
+COPY prisma ./docker/prisma
+COPY public ./docker/public
 
 
 RUN npm i -g typescript
