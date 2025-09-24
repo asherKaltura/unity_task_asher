@@ -35,7 +35,7 @@ jobs:
       # Start Docker Compose
       - name: Start Docker Compose
         run: |
-          docker-compose up -d
+          docker-compose -f docker/docker-compose.yaml up -d
           docker ps
 
       # Wait for services to be ready
