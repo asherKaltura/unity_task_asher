@@ -19,6 +19,7 @@ public class DriverManager {
 
             switch (browser) {
                 case "chrome":
+
                     WebDriverManager.chromedriver().setup();
                     ChromeOptions chromeOptions = new ChromeOptions();
                     if (headless) {
