@@ -47,16 +47,11 @@ services:
       mongo_db:
         condition: service_started
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./
     ports:
       - "3000:3000"
 
 volumes:
-  - ./src:/app/src
-  - ./prisma:/app/prisma
-  - ./public:/app/public
-  - ./tsconfig.json:/app/tsconfig.json
-  - mongo_db_example_app: { }
-  - postgres_db_example_app: { }
-  - mysql_db_example_app: { }
+  mongo_db_example_app:
+  postgres_db_example_app:
+  mysql_db_example_app:
