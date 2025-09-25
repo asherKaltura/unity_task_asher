@@ -18,11 +18,11 @@ RUN npm i -g typescript
 RUN yarn build
 RUN npx prisma generate
 
-# Environment variables
+
 ENV ADMIN_JS_SKIP_BUNDLE="true"
 ENV HOST=0.0.0.0   # <-- Add this to bind Node to all network interfaces
 
 EXPOSE 3000
 
-# Start the app with migrations
+
 CMD ["sh", "-c", "yarn prisma migrate dev --schema prisma/schema.prisma && yarn start --hostname 0.0.0.0"]
