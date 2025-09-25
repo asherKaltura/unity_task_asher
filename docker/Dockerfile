@@ -29,5 +29,4 @@ ENV ADMIN_JS_SKIP_BUNDLE="true"
 EXPOSE 3000
 
 
-CMD ["sh", "-c", "yarn prisma migrate dev --schema prisma/schema.prisma && yarn start --hostname 0.0.0.0"]
-
+CMD ["sh", "-c", "yarn prisma migrate dev --schema prisma/schema.prisma && yarn start"]
