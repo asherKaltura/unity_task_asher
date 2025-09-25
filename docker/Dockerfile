@@ -1,4 +1,4 @@
-# Use Node LTS (Debian-based) instead of Alpine
+
 FROM node:18
 
 WORKDIR /admin
