@@ -60,3 +60,6 @@ volumes:
   - ./prisma:/app/prisma
   - ./public:/app/public
   - ./tsconfig.json:/app/tsconfig.json
+  - mongo_db_example_app: { }
+  - postgres_db_example_app: { }
+  - mysql_db_example_app: { }
