@@ -53,9 +53,6 @@ services:
       - "3000:3000"
 
 volumes:
-  mongo_db_example_app:
-  postgres_db_example_app:
-  mysql_db_example_app:
   - ./src:/app/src
   - ./prisma:/app/prisma
   - ./public:/app/public
