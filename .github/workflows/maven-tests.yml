@@ -48,12 +48,13 @@ jobs:
         run: sleep 15
       - name: Wait for app to be ready
         run: |
-              for i in {1..60}; do
-              if curl -s http://app:3000 > /dev/null; then
-              echo "App is up!"
-              break
+             for i in {1..60}; do
+              code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000)
+              if [ "$code" -eq 200 ]; then
+               echo "App is up!"
+               break
               fi
-              echo "Waiting for app..."
+              echo "Waiting for app... (status code: $code)"
               sleep 5
               done
       # Run Maven tests
