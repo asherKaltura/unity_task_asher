@@ -47,7 +47,7 @@ services:
       mongo_db:
         condition: service_started
     build:
-      context: ./
+      context: .
     ports:
       - "3000:3000"
 
