@@ -58,7 +58,7 @@ jobs:
               done
       # Run Maven tests
       - name: Run Selenium tests
-        run: mvn -B clean test -Dbase.url=http://app:3000
+        run: mvn -B clean test
 
 
       # Stop Docker after tests
