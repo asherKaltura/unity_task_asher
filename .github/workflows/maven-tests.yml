@@ -34,7 +34,7 @@ jobs:
           docker-compose --version
 
       - name: Build Docker image
-        run: docker build -f docker/Dockerfile docker -t my-app:latest
+        run: docker build -f docker/Dockerfile docker -t docker:latest
 
       # Start Docker Compose
       - name: Start Docker Compose
