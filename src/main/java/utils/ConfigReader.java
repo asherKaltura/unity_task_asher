@@ -16,6 +16,13 @@ public class ConfigReader {
     }
 
     public static String get(String key) {
-        return prop.getProperty(key);
+        if (System.getProperty(key)==null){
+            return prop.getProperty(key);
+
+        }else{
+
+            return System.getProperty(key);
+        }
+
     }
 }
