@@ -55,6 +55,7 @@ jobs:
               fi
               echo "Waiting for app..."
               sleep 5
+              docker ps
               done
       # Run Maven tests
       - name: Run Selenium tests
