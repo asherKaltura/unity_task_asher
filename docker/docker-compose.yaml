@@ -29,7 +29,7 @@ services:
       MYSQL_PASSWORD: adminjs
       MYSQL_ROOT_PASSWORD: adminjs
       MYSQL_DATABASE: adminjs
-   
+
 
     ports:
       - "3306:3306"
@@ -54,8 +54,7 @@ services:
 
     ports:
       - "3000:3000"
-    environment:
-          MYSQL_DATABASE_URL: "mysql://adminjs:adminjs@mysql_db:3306/adminjs"
+
 
 volumes:
   mongo_db_example_app:
