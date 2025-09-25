@@ -48,14 +48,14 @@ jobs:
         run: sleep 15
       - name: Wait for app to be ready
         run: |
-          for i in {1..30}; do
-           if curl -s http://localhost:3000 > /dev/null; then
-          echo "App is up!"
-          break
-          fi
-          echo "Waiting for app..."
-          sleep 5
-         done
+              for i in {1..30}; do
+              if curl -s http://localhost:3000 > /dev/null; then
+              echo "App is up!"
+              break
+              fi
+              echo "Waiting for app..."
+              sleep 5
+              done
       # Run Maven tests
       - name: Run Selenium tests
         run: mvn -B clean test
