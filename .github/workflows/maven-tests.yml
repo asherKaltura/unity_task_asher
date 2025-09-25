@@ -46,16 +46,30 @@ jobs:
           docker ps
 
       # Wait for app to be ready using service name
+      # Wait for app to be ready using localhost
       - name: Wait for app to be ready
         run: |
-              for i in {1..61}; do
-              if curl -s http://app:3000 > /dev/null; then
-              echo "App is up!"
-              break
-              fi
-              echo "Waiting for app..."
-              sleep 5
-              done
+          for i in {1..60}; do
+            if curl -s http://localhost:3000 > /dev/null; then
+              echo " App is up!"
+              exit 0
+            fi
+            echo " Waiting for app..."
+            sleep 5
+          done
+          
+          echo " App did not start in time. Showing container logs..."
+          echo "=== Logs: adminjs-app ==="
+          docker logs adminjs-app || true
+          echo "=== Logs: postgres_db ==="
+          docker logs postgres_db || true
+          echo "=== Logs: mysql_db ==="
+          docker logs mysql_db || true
+          echo "=== Logs: mongo_db ==="
+          docker logs mongo_db || true
+          
+          exit 1
+      
 
       # Run Maven Selenium tests
       - name: Run Selenium tests
