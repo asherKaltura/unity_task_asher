@@ -48,18 +48,18 @@ jobs:
         run: sleep 15
       - name: Wait for app to be ready
         run: |
-          for i in {1..60}; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" http://app:3000)
-            if [ "$code" -eq 200 ]; then
+              for i in {1..90}; do
+              if curl -s http://app:3000 > /dev/null; then
               echo "App is up!"
               break
-            fi
-            echo "Waiting for app... (status code: $code)"
-            sleep 5
-          done
+              fi
+              echo "Waiting for app..."
+              sleep 5
+              done
       # Run Maven tests
       - name: Run Selenium tests
-        run: mvn -B clean test -Dbase.url=http://app:3000
+        run: mvn -B clean test
+
 
 
       # Stop Docker after tests
