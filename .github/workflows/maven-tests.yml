@@ -46,6 +46,7 @@ jobs:
       # Wait for services to be ready
       - name: Wait for services
         run: sleep 15
+
       - name: Wait for app to be ready
         run: |
               for i in {1..100}; do
