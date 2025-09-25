@@ -55,7 +55,7 @@ jobs:
               fi
               echo "Waiting for app..."
               sleep 5
-              docker-compose -f docker/docker-compose.yaml ps
+           
           
           done
       # Run Maven tests
