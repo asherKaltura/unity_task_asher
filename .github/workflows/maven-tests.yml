@@ -73,7 +73,7 @@ jobs:
 
       # Run Maven Selenium tests
       - name: Run Selenium tests
-        run: mvn -B clean test -Dbase.url=http://app:3000
+        run: mvn -B clean test -Dbase.url=http://localhost:3000
 
       # Stop Docker after tests
       - name: Stop Docker Compose
