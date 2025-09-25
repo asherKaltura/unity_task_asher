@@ -29,8 +29,6 @@ services:
       MYSQL_PASSWORD: adminjs
       MYSQL_ROOT_PASSWORD: adminjs
       MYSQL_DATABASE: adminjs
-
-
     ports:
       - "3306:3306"
     volumes:
@@ -48,13 +46,9 @@ services:
         condition: service_healthy
       mongo_db:
         condition: service_started
-    build:
-      context: .
-      dockerfile: Dockerfile
-
+    build: .
     ports:
       - "3000:3000"
-
 
 volumes:
   mongo_db_example_app:
