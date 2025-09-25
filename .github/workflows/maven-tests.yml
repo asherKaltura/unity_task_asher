@@ -48,7 +48,7 @@ jobs:
         run: sleep 15
       - name: Wait for app to be ready
         run: |
-              for i in {1..50}; do
+              for i in {1..10}; do
               if curl -s http://app:3000 > /dev/null; then
               echo "App is up!"
               break
@@ -58,7 +58,7 @@ jobs:
               done
       # Run Maven tests
       - name: Run Selenium tests
-        run: mvn -B clean test
+        run: mvn -B clean test -Dbase.url=http://app:3000
 
       # Stop Docker after tests
       - name: Stop Docker Compose
