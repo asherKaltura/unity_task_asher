@@ -42,7 +42,7 @@ jobs:
       # Start Docker Compose
       - name: Start Docker Compose
         run: |
-          docker-compose -f docker/docker-compose.yaml up -d
+          docker-compose -f auto_dock/docker-compose.yaml up -d
           docker ps
 
       # Wait for app to be ready using service name
@@ -78,4 +78,4 @@ jobs:
       # Stop Docker after tests
       - name: Stop Docker Compose
         if: always()
-        run: docker-compose -f docker/docker-compose.yaml down
+        run: docker-compose -f auto_dock/docker-compose.yaml down
