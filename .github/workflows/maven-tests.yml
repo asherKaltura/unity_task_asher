@@ -33,6 +33,9 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
           
+      # ✅ Debug step
+      - name: List files in docker
+        run: ls -R docker
 
       # Start Docker Compose
       - name: Start Docker Compose
