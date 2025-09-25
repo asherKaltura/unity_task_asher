@@ -27,13 +27,15 @@ jobs:
         run: |
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt install -y ./google-chrome-stable_current_amd64.deb
+
+      # Install Docker Compose
       - name: Install Docker Compose
         run: |
-         sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
-          
-      # ✅ Debug step
+
+      # Debug: list docker folder
       - name: List files in docker
         run: ls -R docker
 
@@ -42,19 +44,23 @@ jobs:
         run: |
           docker-compose -f docker/docker-compose.yaml up -d
           docker ps
+
+      # Wait for app to be ready using service name
       - name: Wait for app to be ready
         run: |
-              for i in {1..100}; do
-              if curl -s http://localhost:3000 > /dev/null; then
+          for i in {1..60}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://app:3000)
+            if [ "$code" -eq 200 ]; then
               echo "App is up!"
               break
-              fi
-              echo "Waiting for app..."
-              sleep 5
+            fi
+            echo "Waiting for app... (status code: $code)"
+            sleep 5
           done
-      # Run Maven tests
+
+      # Run Maven Selenium tests
       - name: Run Selenium tests
-        run: mvn -B clean test
+        run: mvn -B clean test -Dbase.url=http://app:3000
 
       # Stop Docker after tests
       - name: Stop Docker Compose
