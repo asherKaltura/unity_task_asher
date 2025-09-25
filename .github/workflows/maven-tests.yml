@@ -43,9 +43,7 @@ jobs:
           docker-compose -f docker/docker-compose.yaml up -d
           docker ps
 
-      # Wait for services to be ready
-      - name: Wait for services
-        run: sleep 15
+
 
       - name: Wait for app to be ready
         run: |
