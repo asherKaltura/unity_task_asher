@@ -36,8 +36,8 @@ jobs:
           docker-compose --version
 
       # Debug: list docker folder
-      - name: List files in docker
-        run: ls -R docker
+      - name: List files in auto_dock
+        run: ls -R auto_dock
 
       # Start Docker Compose
       - name: Start Docker Compose
