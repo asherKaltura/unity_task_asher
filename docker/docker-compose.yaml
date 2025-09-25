@@ -47,7 +47,7 @@ services:
       mongo_db:
         condition: service_started
     build:
-      context: .
+      context: ./docker
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
