@@ -30,3 +30,4 @@ EXPOSE 3000
 
 
 CMD ["sh", "-c", "yarn prisma migrate dev --schema prisma/schema.prisma && yarn start --hostname 0.0.0.0"]
+
