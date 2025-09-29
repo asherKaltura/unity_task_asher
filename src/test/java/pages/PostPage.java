@@ -53,7 +53,7 @@ public class PostPage extends BasePage {
     private WebElement menu;
 
     public void createPost(String title, String content, String publisher) {
-        PageFactory.initElements(driver, this); // <- חובה!
+        PageFactory.initElements(driver, this); //
         click(postMenu);
         click(createNewBtn);
         type(titleInput, title);

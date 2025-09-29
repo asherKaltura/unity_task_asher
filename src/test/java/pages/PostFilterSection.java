@@ -27,7 +27,7 @@ public class PostFilterSection extends BasePage {
     private WebElement resetBtn;
 
     public void open() {
-        PageFactory.initElements(driver, this); // <- חובה!
+        PageFactory.initElements(driver, this); //
         doAction(filterBtn, WebElement::click);
     }
 

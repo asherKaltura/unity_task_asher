@@ -34,7 +34,7 @@ public class PublisherPage extends BasePage {
     private WebElement publisherSaveBtn;
 
     public void createPublisher(String name,String email) throws InterruptedException {
-        PageFactory.initElements(driver, this); // <- חובה!
+        PageFactory.initElements(driver, this); //
         click(happyFolderMenu);
         click(publisherBtn);
         click(createNewPublisherBtn);
