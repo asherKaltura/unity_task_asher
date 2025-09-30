@@ -2,8 +2,10 @@ package tests;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import utils.CleanupManager;
 import utils.ConfigReader;
 import utils.FakerUtils;
 
@@ -17,9 +19,11 @@ public class ApiTests {
     private String content = FakerUtils.someMessage();
     private String publisherId = "";
     private String postId = "";
+    private CleanupManager cleanupManager = new CleanupManager();
+
     @BeforeClass
     public void login() {
-        RestAssured.baseURI =ConfigReader.get("base.url");
+        RestAssured.baseURI = ConfigReader.get("base.url");
 
 
         Response loginResponse = given()
@@ -34,10 +38,20 @@ public class ApiTests {
 
         adminjsCookie = loginResponse.getCookie("adminjs");
         System.out.println("Logged in, adminjs Cookie: " + adminjsCookie);
+
     }
 
-  @Test(priority = 1)
-    public void createPublisher() {
+    @Test
+    public void addPublisherAndAddModifyPost() {
+
+        createPublisher();
+        createPost();
+        removePost();
+        validatePostStatus();
+    }
+
+
+    private void createPublisher() {
         Response response = given()
                 .cookie("adminjs", adminjsCookie)
                 .formParam("name", "Test Publisher")
@@ -48,12 +62,12 @@ public class ApiTests {
                 .extract()
                 .response();
         publisherId = response.jsonPath().getString("record.params.id");
-
         System.out.println("Publisher created id : " + publisherId);
+        cleanupManager.register(() -> deleteApi(publisherId, EntityType.Publisher));
     }
 
-    @Test(priority = 2)
-    public void createPost() {
+
+    private void createPost() {
         Response response = given()
                 .cookie("adminjs", adminjsCookie)
                 .formParam("title", FakerUtils.someMessage())
@@ -66,13 +80,14 @@ public class ApiTests {
                 .statusCode(200)
                 .extract()
                 .response();
-        postId= response.jsonPath().getString("record.params.id");
+        postId = response.jsonPath().getString("record.params.id");
+        System.out.println("Post created id: " + postId);
+        cleanupManager.register(() -> deleteApi(postId, EntityType.Post));
 
-        System.out.println("Post created id: " +postId);
     }
 
-    @Test(priority = 4)
-    public void removePost() {
+
+    private void removePost() {
         Response response = given()
                 .cookie("adminjs", adminjsCookie)
                 .formParam("status", "REMOVED")
@@ -80,20 +95,20 @@ public class ApiTests {
                 .formParam("content", content)
                 .formParam("published", "true")
                 .formParam("publisher", publisherId)
-                .post(String.format("/admin/api/resources/Post/records/%s/edit",postId))
+                .post(String.format("/admin/api/resources/Post/records/%s/edit", postId))
                 .then()
-               // .statusCode(200)
+                // .statusCode(200)
                 .extract()
                 .response();
 
         System.out.println("Post status changed: " + response.asString());
     }
 
-    @Test(priority = 5)
-    public void validatePostStatus() {
+
+    private void validatePostStatus() {
         Response response = given()
                 .cookie("adminjs", adminjsCookie)
-                .get(String.format("/admin/api/resources/Post/records/%s/show",postId))
+                .get(String.format("/admin/api/resources/Post/records/%s/show", postId))
                 .then()
                 .statusCode(200)
                 .extract()
@@ -102,5 +117,34 @@ public class ApiTests {
         String status = response.jsonPath().getString("record.params.status");
         System.out.println("Post current status: " + status);
         assertEquals(status, "REMOVED", "Post status should be REMOVED");
+    }
+
+    private void deleteApi(String id, EntityType entityType) {
+
+        Response response = given()
+                .cookie("adminjs", adminjsCookie)
+                .post(String.format("/admin/api/resources/%s/records/%s/delete", entityType, id))
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        String message = response.jsonPath().getString("notice.message");
+        System.out.println(String.format("%s %s %s", entityType, id, message));
+        assertEquals(message, "successfullyDeleted", String.format("%s %s %s", entityType, id, message));
+
+
+    }
+
+    enum EntityType {
+        Publisher, Post;
+
+
+    }
+    @AfterClass
+    private void tearDown(){
+
+        cleanupManager.cleanup();
+
     }
 }
