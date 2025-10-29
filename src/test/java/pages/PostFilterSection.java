@@ -43,6 +43,12 @@ public class PostFilterSection extends BasePage {
             el.sendKeys(title);
         });
     }
+    public void applyFilter(String title, String content) {
+        open();
+        setTitleFilter(title);
+        setContentFilter(content);
+        apply();
+    }
     public void apply() {
         doAction(applyBtn, WebElement::click);
     }

@@ -32,24 +32,15 @@ public class UITests {
         String content = FakerUtils.someMessage();
         PublisherPage publisherPage = new PublisherPage();
         publisherPage.createPublisher(FakerUtils.generateFullName(), email);
-
         String title = FakerUtils.someMessage();
         PostPage postPage = new PostPage();
         postPage.createPost(title, content, email);
-
-        postPage.filter().open();
-        postPage.filter().setTitleFilter(title);
-        postPage.filter().setContentFilter(content);
-        postPage.filter().apply();
+        postPage.filter().applyFilter(title,content);
         assertEquals(postPage.getValueByHeader("Status"), "ACTIVE");
         postPage.clickAction(PostPage.PostAction.EDIT);
         postPage.changeStatus(PostPage.PostStatus.REMOVED);
         postPage.clickSave();
-
-        postPage.filter().open();
-        postPage.filter().setTitleFilter(title);
-        postPage.filter().setContentFilter(content);
-        postPage.filter().apply();
+        postPage.filter().applyFilter(title,content);
         assertEquals(postPage.getValueByHeader("Status"), PostPage.PostStatus.REMOVED.name());
 
 
