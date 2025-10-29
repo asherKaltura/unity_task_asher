@@ -69,7 +69,6 @@ jobs:
           docker logs mongo_db || true
           
           exit 1
-      
 
       # Run Maven Selenium tests
       - name: Run Selenium tests
