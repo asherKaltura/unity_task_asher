@@ -15,7 +15,7 @@ public class DriverManager {
     public static WebDriver getDriver() {
         if (driver == null) {
             String browser = ConfigReader.get("browser").toLowerCase();
-            boolean headless = Boolean.parseBoolean(ConfigReader.get("headless")==null?"false":"true") ;
+            boolean headless = Boolean.parseBoolean(ConfigReader.get("headless")==null?"false":ConfigReader.get("headless")) ;
 
             switch (browser) {
                 case "chrome":
