@@ -35,7 +35,9 @@ public class Main {
     static  Function<Integer,String>  numAsText = a-> a + "מספר:";
 
     public static void main(String[] args) {
-
+Test1  c = new Test1();
+        System.out.println(c.getSevenOrFive(Test1.FiveOrDeven.Seven));
+        System.out.println(c.getSevenOrFive(Test1.FiveOrDeven.Five));
 
         checkPolindrom("aba");
         checkPolindrom("acfa");
@@ -223,7 +225,12 @@ t.start();
 
 
     }
+
+
+
 }
+
+
 
 interface changeStingToInt {
 

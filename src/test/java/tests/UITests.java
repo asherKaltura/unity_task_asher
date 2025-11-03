@@ -1,5 +1,6 @@
 package tests;
 
+import assertion.AssertTrue;
 import org.testng.annotations.*;
 import pages.LoginPage;
 import pages.PublisherPage;
@@ -15,7 +16,7 @@ import java.util.Deque;
 import static org.testng.Assert.assertEquals;
 import static utils.DriverManager.quitDriver;
 
-public class UITests {
+public class UITests  extends  AbstractTestCase{
 
 
     @BeforeClass
@@ -41,6 +42,8 @@ public class UITests {
         postPage.changeStatus(PostPage.PostStatus.REMOVED);
         postPage.clickSave();
         postPage.filter().applyFilter(title,content);
+        report.step("Post status should be REMOVED"); ;
+assertion.verify(new AssertTrue(postPage.getValueByHeader("Status").equals(PostPage.PostStatus.REMOVED.name()),"Status == REMOVED"),false);
         assertEquals(postPage.getValueByHeader("Status"), PostPage.PostStatus.REMOVED.name());
 
 

@@ -1,9 +1,11 @@
 package tests;
 
+import assertion.AssertTrue;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import utils.CleanupManager;
 import utils.ConfigReader;
@@ -11,8 +13,8 @@ import utils.FakerUtils;
 
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
-
-public class ApiTests {
+@Listeners(il.co.topq.difido.ReportManagerHook.class)
+public class ApiTests extends AbstractTestCase {
 
     private String adminjsCookie;
     private String email = FakerUtils.generateEmail();
@@ -116,6 +118,9 @@ public class ApiTests {
 
         String status = response.jsonPath().getString("record.params.status");
         System.out.println("Post current status: " + status);
+        report.step("Post status should be REMOVED"); ;
+        assertion.verify(new AssertTrue(status.equals("REMOVED"), "Post status should be REMOVED"),true);
+
         assertEquals(status, "REMOVED", "Post status should be REMOVED");
     }
 
