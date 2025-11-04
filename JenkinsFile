@@ -38,10 +38,10 @@ pipeline {
                     env.EXECUTION_ID = sh(script: """curl --silent --data '{
                         "description":"#${BUILD_NUMBER}-${SUITE}-DEV",
                         "executionProperties":{
-                            "User":"${BUILD_USER}",
-                            "Version":"${VERSION}",
-                            "Legacy":"${LEGACY}",
-                            "Node":"${NODE_NAME}"
+                            "User":"sss",
+                            "Version":"2",
+                            "Legacy":"true",
+                            "Node":"ashre"
                         },
                         "shared":true,
                         "forceNew":true
