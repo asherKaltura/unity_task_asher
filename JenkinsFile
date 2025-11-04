@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DIFIDO_URL = 'http://loclalhost:8090'
+        DIFIDO_URL = 'http://localhost/:8090'
         BUILD_NUMBER = "${env.BUILD_NUMBER}"
         BUILD_USER = "${env.BUILD_USER}"
         VERSION = '1.0'
