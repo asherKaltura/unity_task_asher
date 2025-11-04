@@ -2,79 +2,90 @@ pipeline {
     agent any
 
     environment {
-        DIFIDO_URL = 'http://localhost/:8090'
-        BUILD_NUMBER = "${env.BUILD_NUMBER}"
-        BUILD_USER = "${env.BUILD_USER}"
+        // הגדר משתנים לפי הסביבה שלך
+        DIFIDO_URL = 'http://localhost:8090'
+        DIFIDO_HOST = 'localhost'
+        DIFIDO_PORT = '8090'
+        DEFAULT_MAILING_LIST = 'qa@example.com'
+        MAILING_LIST = ''
+        ENV = 'dev'
         VERSION = '1.0'
+        NODE_NAME = 'windows-agent'
         LEGACY = 'false'
-        NODE_NAME = "${env.NODE_NAME}"
-        SUITE = 'core/tests'  // default suite, can override
-    }
-
-    parameters {
-        string(name: 'MANUAL_SUITE_NAME', defaultValue: '', description: 'Optional manual suite name')
-        string(name: 'TEST_NAME', defaultValue: '', description: 'Optional test name')
+        BUILD_USER = 'jenkins'
     }
 
     stages {
 
-        stage('Prepare Suite') {
+        stage('Prepare Difido Properties') {
             steps {
                 script {
-                    if (params.MANUAL_SUITE_NAME) {
-                        env.SUITE = params.MANUAL_SUITE_NAME
-                    }
-                    if (params.TEST_NAME && env.SUITE.startsWith('core/')) {
-                        env.SUITE = "${env.SUITE}-${params.TEST_NAME}"
-                    }
-                    echo "Suite: ${env.SUITE}"
-                }
-            }
-        }
+                    echo 'Preparing Difido configuration file...'
 
-        stage('Create Difido Execution') {
-            steps {
-                script {
-                    env.EXECUTION_ID = bat(script: """curl --silent --data '{
-                        "description":"#${BUILD_NUMBER}-${SUITE}-DEV",
-                        "executionProperties":{
-                            "User":"sss",
-                            "Version":"2",
-                            "Legacy":"true",
-                            "Node":"ashre"
-                        },
-                        "shared":true,
-                        "forceNew":true
-                    }' -H "Content-Type:application/json" ${DIFIDO_URL}/api/executions/""", returnStdout: true).trim()
-                    echo "Difido Execution ID: ${env.EXECUTION_ID}"
+                    // ניצור תיקיית target
+                    bat 'if not exist target mkdir target'
+
+                    // נבדוק אם יש execution קיים
+                    script {
+                        def executionId = ''
+                        if (env.DIFIDO_EXECUTION_ID == null || env.DIFIDO_EXECUTION_ID == '-1') {
+                            echo "Creating new Difido execution..."
+                            def response = bat(
+                                script: """curl -X POST -H "Content-Type: application/json" ^
+                                -d "{\\"description\\":\\"#${env.BUILD_NUMBER}-${env.ENV}\\", \\"executionProperties\\":{\\"User\\":\\"${env.BUILD_USER}\\", \\"Version\\":\\"${env.VERSION}\\", \\"Legacy\\":\\"${env.LEGACY}\\", \\"Node\\":\\"${env.NODE_NAME}\\"}, \\"shared\\":true, \\"forceNew\\":true}" ^
+                                ${env.DIFIDO_URL}/api/executions/""",
+                                returnStdout: true
+                            ).trim()
+                            executionId = response
+                        } else {
+                            executionId = env.DIFIDO_EXECUTION_ID
+                        }
+                        env.EXECUTION_ID = executionId
+                        echo "Execution ID: ${executionId}"
+                    }
+
+                    // יצירת קובץ properties
+                    bat """
+                        echo dont.compress.extensions=zip > target\\remoteDifido.properties
+                        echo port=${DIFIDO_PORT} >> target\\remoteDifido.properties
+                        echo compress.files.above=5000 >> target\\remoteDifido.properties
+                        echo append.to.existing.execution=true >> target\\remoteDifido.properties
+                        echo existing.execution.id=${env.EXECUTION_ID} >> target\\remoteDifido.properties
+                        echo force.new.execution=false >> target\\remoteDifido.properties
+                        echo enabled=true >> target\\remoteDifido.properties
+                        echo execution.properties=User=${BUILD_USER};Version=${VERSION} >> target\\remoteDifido.properties
+                        echo host=${DIFIDO_HOST} >> target\\remoteDifido.properties
+                        echo use.shared.execution=true >> target\\remoteDifido.properties
+                    """
+                    echo 'Difido properties file created successfully.'
                 }
             }
         }
 
         stage('Run Tests') {
             steps {
-               bat 'mvn clean test'
+                echo 'Running Maven tests...'
+                bat 'mvn clean test'
             }
         }
 
         stage('Publish to Difido') {
+            when {
+                expression { fileExists('target/remoteDifido.properties') }
+            }
             steps {
-                echo "You can upload results to Difido using EXECUTION_ID"
-                // Example: sh 'curl -X POST ... -F "executionId=${EXECUTION_ID}" ...'
+                echo 'Publishing results to Difido...'
+                bat 'copy target\\difido\\* difido-server\\reports\\ /Y'
             }
         }
-
     }
 
     post {
-        always {
-            echo "Pipeline finished"
-        }
         success {
-            echo "Tests succeeded"
+            echo '✅ Tests finished successfully and uploaded to Difido!'
         }
         failure {
-            echo "Tests failed"
+            echo '❌ Tests failed.'
         }
     }
 }
