@@ -22,10 +22,7 @@ pipeline {
                 script {
                     echo 'Preparing Difido configuration file...'
 
-                    // ניצור תיקיית target
-                    bat 'if not exist target mkdir target'
 
-                    // נבדוק אם יש execution קיים
                     script {
                         def executionId = ''
                         if (env.DIFIDO_EXECUTION_ID == null || env.DIFIDO_EXECUTION_ID == '-1') {
@@ -46,16 +43,16 @@ pipeline {
 
                     // יצירת קובץ properties
                     bat """
-                        echo dont.compress.extensions=zip > target\\remoteDifido.properties
-                        echo port=${DIFIDO_PORT} >> target\\remoteDifido.properties
-                        echo compress.files.above=5000 >> target\\remoteDifido.properties
-                        echo append.to.existing.execution=true >> target\\remoteDifido.properties
-                        echo existing.execution.id=${env.EXECUTION_ID} >> target\\remoteDifido.properties
-                        echo force.new.execution=false >> target\\remoteDifido.properties
-                        echo enabled=true >> target\\remoteDifido.properties
-                        echo execution.properties=User=${BUILD_USER};Version=${VERSION} >> target\\remoteDifido.properties
-                        echo host=${DIFIDO_HOST} >> target\\remoteDifido.properties
-                        echo use.shared.execution=true >> target\\remoteDifido.properties
+                        echo dont.compress.extensions=zip > remoteDifido.properties
+                        echo port=${DIFIDO_PORT} >> remoteDifido.properties
+                        echo compress.files.above=5000 >> remoteDifido.properties
+                        echo append.to.existing.execution=true >> remoteDifido.properties
+                        echo existing.execution.id=${env.EXECUTION_ID} >> remoteDifido.properties
+                        echo force.new.execution=false >> remoteDifido.properties
+                        echo enabled=true >> remoteDifido.properties
+                        echo execution.properties=User=${BUILD_USER};Version=${VERSION} >> remoteDifido.properties
+                        echo host=${DIFIDO_HOST} >> remoteDifido.properties
+                        echo use.shared.execution=true >> remoteDifido.properties
                     """
                     echo 'Difido properties file created successfully.'
                 }
@@ -69,23 +66,15 @@ pipeline {
             }
         }
 
-        stage('Publish to Difido') {
-            when {
-                expression { fileExists('target/remoteDifido.properties') }
-            }
-            steps {
-                echo 'Publishing results to Difido...'
-                bat 'copy target\\difido\\* difido-server\\reports\\ /Y'
-            }
-        }
+
     }
 
     post {
         success {
-            echo '✅ Tests finished successfully and uploaded to Difido!'
+            echo 'Tests finished successfully and uploaded to Difido!'
         }
         failure {
-            echo '❌ Tests failed.'
+            echo  'Tests failed.'
         }
     }
 }
