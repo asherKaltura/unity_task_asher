@@ -84,7 +84,6 @@ public class Car {
             this.engine = engine;
             return this;
         }
-
         public EngineType getEngineType() {
             return engineType;
         }
