@@ -35,7 +35,7 @@ pipeline {
         stage('Create Difido Execution') {
             steps {
                 script {
-                    env.EXECUTION_ID = sh(script: """curl --silent --data '{
+                    env.EXECUTION_ID = bat(script: """curl --silent --data '{
                         "description":"#${BUILD_NUMBER}-${SUITE}-DEV",
                         "executionProperties":{
                             "User":"sss",
