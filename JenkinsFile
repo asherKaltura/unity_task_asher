@@ -53,8 +53,8 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                echo "Here you would run your manual or automated tests"
-                // Example: sh 'mvn clean test'
+
+               sh 'mvn clean test'
             }
         }
 
