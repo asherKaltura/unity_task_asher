@@ -1,80 +1,43 @@
-pipeline {
-    agent any
+stage('Prepare Difido Properties') {
+    steps {
+        script {
+            echo 'Preparing Difido configuration file...'
 
-    environment {
-        // הגדר משתנים לפי הסביבה שלך
-        DIFIDO_URL = 'http://localhost:8090'
-        DIFIDO_HOST = 'localhost'
-        DIFIDO_PORT = '8090'
-        DEFAULT_MAILING_LIST = 'qa@example.com'
-        MAILING_LIST = ''
-        ENV = 'dev'
-        VERSION = '1.0'
-        NODE_NAME = 'windows-agent'
-        LEGACY = 'false'
-        BUILD_USER = 'jenkins'
-    }
+            def executionId = ''
+            if (!env.DIFIDO_EXECUTION_ID || env.DIFIDO_EXECUTION_ID == '-1') {
+                echo "Creating new Difido execution..."
 
-    stages {
+                // שמור את הפלט של curl לקובץ זמני בתיקייה הראשית
+                bat """
+                    curl -X POST -H "Content-Type: application/json" ^
+                    -d "{\\"description\\":\\"#${env.BUILD_NUMBER}-${env.ENV}\\", \\"executionProperties\\":{\\"User\\":\\"${env.BUILD_USER}\\", \\"Version\\":\\"${env.VERSION}\\", \\"Legacy\\":\\"${env.LEGACY}\\", \\"Node\\":\\"${env.NODE_NAME}\\"}, \\"shared\\":true, \\"forceNew\\":true}" ^
+                    ${env.DIFIDO_URL}/api/executions/ > execution_id.txt
+                """
 
-        stage('Prepare Difido Properties') {
-            steps {
-                script {
-                    echo 'Preparing Difido configuration file...'
-
-
-                    script {
-                        def executionId = ''
-                        if (env.DIFIDO_EXECUTION_ID == null || env.DIFIDO_EXECUTION_ID == '-1') {
-                            echo "Creating new Difido execution..."
-                            def response = bat(
-                                script: """curl -X POST -H "Content-Type: application/json" ^
-                                -d "{\\"description\\":\\"#${env.BUILD_NUMBER}-${env.ENV}\\", \\"executionProperties\\":{\\"User\\":\\"${env.BUILD_USER}\\", \\"Version\\":\\"${env.VERSION}\\", \\"Legacy\\":\\"${env.LEGACY}\\", \\"Node\\":\\"${env.NODE_NAME}\\"}, \\"shared\\":true, \\"forceNew\\":true}" ^
-                                ${env.DIFIDO_URL}/api/executions/""",
-                                returnStdout: true
-                            ).trim()
-                            executionId = response
-                        } else {
-                            executionId = env.DIFIDO_EXECUTION_ID
-                        }
-                        env.EXECUTION_ID = executionId
-                        echo "Execution ID: ${executionId}"
-                    }
-
-                    // יצירת קובץ properties
-                    bat """
-                        echo dont.compress.extensions=zip > remoteDifido.properties
-                        echo port=${DIFIDO_PORT} >> remoteDifido.properties
-                        echo compress.files.above=5000 >> remoteDifido.properties
-                        echo append.to.existing.execution=true >> remoteDifido.properties
-                        echo existing.execution.id=${env.EXECUTION_ID} >> remoteDifido.properties
-                        echo force.new.execution=false >> remoteDifido.properties
-                        echo enabled=true >> remoteDifido.properties
-                        echo execution.properties=User=${BUILD_USER};Version=${VERSION} >> remoteDifido.properties
-                        echo host=${DIFIDO_HOST} >> remoteDifido.properties
-                        echo use.shared.execution=true >> remoteDifido.properties
-                    """
-                    echo 'Difido properties file created successfully.'
-                }
+                // קרא את ה־execution id מתוך הקובץ
+                executionId = readFile('execution_id.txt').trim()
+                echo "Got execution id: ${executionId}"
+            } else {
+                executionId = env.DIFIDO_EXECUTION_ID
             }
-        }
 
-        stage('Run Tests') {
-            steps {
-                echo 'Running Maven tests...'
-                bat 'mvn clean test'
-            }
-        }
+            env.EXECUTION_ID = executionId
 
+            // צור את קובץ ההגדרות ישירות בתיקיית העבודה
+            bat """
+                echo dont.compress.extensions=zip > remoteDifido.properties
+                echo port=${env.DIFIDO_PORT} >> remoteDifido.properties
+                echo compress.files.above=5000 >> remoteDifido.properties
+                echo append.to.existing.execution=true >> remoteDifido.properties
+                echo existing.execution.id=${executionId} >> remoteDifido.properties
+                echo force.new.execution=false >> remoteDifido.properties
+                echo enabled=true >> remoteDifido.properties
+                echo execution.properties=User=${env.BUILD_USER};Version=${env.VERSION} >> remoteDifido.properties
+                echo host=${env.DIFIDO_HOST} >> remoteDifido.properties
+                echo use.shared.execution=true >> remoteDifido.properties
+            """
 
-    }
-
-    post {
-        success {
-            echo 'Tests finished successfully and uploaded to Difido!'
-        }
-        failure {
-            echo  'Tests failed.'
+            echo 'remoteDifido.properties created successfully in workspace.'
         }
     }
 }
