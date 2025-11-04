@@ -11,7 +11,6 @@ pipeline {
         ENV = "dev"
         NODE_NAME = "windows-agent"
     }
-
     stages {
 
         stage('Clean Workspace') {
