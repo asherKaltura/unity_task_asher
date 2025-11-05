@@ -17,7 +17,7 @@ public class User  implements Observer{
     @Override
     public void update(String news) {
 
-        System.out.println("📩 למשתמש " + name + " (" + address +    news + ") נשלח עדכון:");
+        System.out.println(" למשתמש " + name + " (" + address +    news + ") נשלח עדכון:");
 
     }
 
