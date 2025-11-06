@@ -16,7 +16,7 @@ import java.util.Deque;
 import static org.testng.Assert.assertEquals;
 import static utils.DriverManager.quitDriver;
 
-public class UITests  extends  AbstractTestCase{
+public class UITests extends AbstractTestCase {
 
 
     @BeforeClass
@@ -36,14 +36,15 @@ public class UITests  extends  AbstractTestCase{
         String title = FakerUtils.someMessage();
         PostPage postPage = new PostPage();
         postPage.createPost(title, content, email);
-        postPage.filter().applyFilter(title,content);
+        postPage.filter().applyFilter(title, content);
         assertEquals(postPage.getValueByHeader("Status"), "ACTIVE");
         postPage.clickAction(PostPage.PostAction.EDIT);
         postPage.changeStatus(PostPage.PostStatus.REMOVED);
         postPage.clickSave();
-        postPage.filter().applyFilter(title,content);
-        report.step("Post status should be REMOVED"); ;
-assertion.verify(new AssertTrue(postPage.getValueByHeader("Status").equals(PostPage.PostStatus.REMOVED.name()),"Status == REMOVED"),false);
+        postPage.filter().applyFilter(title, content);
+        report.step("Post status should be REMOVED");
+        ;
+        assertion.verify(new AssertTrue(postPage.getValueByHeader("Status").equals(PostPage.PostStatus.REMOVED.name()), "Status == REMOVED"), false);
         assertEquals(postPage.getValueByHeader("Status"), PostPage.PostStatus.REMOVED.name());
 
 
