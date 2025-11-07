@@ -9,7 +9,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <suiteXml>ui_api_tests</suiteXml>
+        <suiteXml>ui_api_tests1</suiteXml>
     </properties>
     <repositories>
     <repository>
