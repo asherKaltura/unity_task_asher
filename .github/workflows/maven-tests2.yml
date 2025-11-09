@@ -1,0 +1,19 @@
+name: Maven Selenium Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+
+      # Run Maven Selenium tests
+      - name: Run Selenium tests
+        run: mvn -B clean test -Dheadless=true -Dbase.url=http://localhost:3000
+
