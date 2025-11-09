@@ -16,5 +16,6 @@ jobs:
         uses: actions/checkout@v4
       # Run Maven Selenium tests
       - name: Run Selenium tests
-        run: mvn -B clean test -Dheadless=true -Dbase.url=http://localhost:3000 -DsuiteXml=ui_tests
+        run: mvn -B clean test -Dheadless=true "-Dbase.url=http://localhost:3000" -DsuiteXml=ui_tests
+
 
