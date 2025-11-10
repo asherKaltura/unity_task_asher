@@ -21,7 +21,6 @@ public class UITests extends AbstractTestCase {
 
     @BeforeClass
     public void setup() {
-
         DriverManager.getDriver().get(ConfigReader.get("base.url") + "/admin");
     }
 
