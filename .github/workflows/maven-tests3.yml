@@ -8,10 +8,10 @@ on:
 
 jobs:
   automation:
-    runs-on: self-hosted
+    runs-on: windows-latest
 
     env:
-      # Secrets צריכים להיות מוגדרים במאגר
+      # Secrets for sensitive values
       DIFIDO_URL: ${{ secrets.DIFIDO_URL }}
       DIFIDO_HOST: ${{ secrets.DIFIDO_HOST }}
       DIFIDO_PORT: ${{ secrets.DIFIDO_PORT }}
@@ -21,13 +21,14 @@ jobs:
       NODE_NAME: ${{ secrets.NODE_NAME }}
       DEFAULT_MAILING_LIST: ${{ secrets.DEFAULT_MAILING_LIST }}
       MAILING_LIST: ""
-      ALLURE_DOCKER_URL: ${{ secrets.ALLURE_DOCKER_URL }} # למשל http://localhost:5050
+      ALLURE_DOCKER_URL: ${{ secrets.ALLURE_DOCKER_URL }} # e.g. http://localhost:5050
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set default environment variables
+        shell: cmd
         run: |
           if "%DIFIDO_URL%"=="" set DIFIDO_URL=http://localhost:8090
           if "%BUILD_USER%"=="" set BUILD_USER=github
@@ -40,6 +41,7 @@ jobs:
           if "%MAILING_LIST%"=="" set MAILING_LIST=
 
       - name: Print environment variables
+        shell: cmd
         run: |
           echo DIFIDO_URL=%DIFIDO_URL%
           echo DIFIDO_HOST=%DIFIDO_HOST%
@@ -52,16 +54,19 @@ jobs:
           echo DEFAULT_MAILING_LIST=%DEFAULT_MAILING_LIST%
 
       - name: Build Maven project
+        shell: cmd
         run: mvn clean install -Dmaven.test.skip=true
 
       - name: Run Selenium tests
+        shell: cmd
         run: mvn -B clean test -Dheadless=true -Dbase.url=http://localhost:3000 -DsuiteXml=ui_tests
 
       - name: List Allure results
-        run: dir "target\allure-results"
         shell: cmd
+        run: dir "target\allure-results"
 
       - name: Create target folder if missing
+        shell: cmd
         run: |
           if not exist target mkdir target
 
@@ -121,3 +126,10 @@ jobs:
             curl -X POST "%ALLURE_DOCKER_URL%/allure-docker-service/send-results?project_id=asher" -F "files[]=@%%f"
           )
 
+      - name: Upload Allure and anchorChain artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-artifacts
+          path: |
+            target\allure-results
+            anchorChain.tsv
