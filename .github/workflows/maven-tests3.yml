@@ -126,10 +126,4 @@ jobs:
             curl -X POST "%ALLURE_DOCKER_URL%/allure-docker-service/send-results?project_id=asher" -F "files[]=@%%f"
           )
 
-      - name: Upload Allure and anchorChain artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-artifacts
-          path: |
-            target\allure-results
-            anchorChain.tsv
+
