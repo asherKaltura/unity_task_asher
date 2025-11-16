@@ -1,0 +1,130 @@
+name: Jenkins/Difido Automation Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  automation:
+    runs-on: self-hosted
+
+    env:
+      # Secrets צריכים להיות מוגדרים במאגר
+      DIFIDO_URL: ${{ secrets.DIFIDO_URL }}
+      DIFIDO_HOST: ${{ secrets.DIFIDO_HOST }}
+      DIFIDO_PORT: ${{ secrets.DIFIDO_PORT }}
+      BUILD_USER: ${{ secrets.BUILD_USER }}
+      VERSION: ${{ secrets.VERSION }}
+      LEGACY: ${{ secrets.LEGACY }}
+      NODE_NAME: ${{ secrets.NODE_NAME }}
+      DEFAULT_MAILING_LIST: ${{ secrets.DEFAULT_MAILING_LIST }}
+      MAILING_LIST: ""
+      ALLURE_DOCKER_URL: ${{ secrets.ALLURE_DOCKER_URL }} # למשל http://localhost:5050
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set default environment variables
+        run: |
+          if "%DIFIDO_URL%"=="" set DIFIDO_URL=http://localhost:8090
+          if "%BUILD_USER%"=="" set BUILD_USER=github
+          if "%VERSION%"=="" set VERSION=1.0
+          if "%LEGACY%"=="" set LEGACY=false
+          if "%NODE_NAME%"=="" set NODE_NAME=defaultNode
+          if "%DIFIDO_HOST%"=="" set DIFIDO_HOST=localhost
+          if "%DIFIDO_PORT%"=="" set DIFIDO_PORT=8090
+          if "%DEFAULT_MAILING_LIST%"=="" set DEFAULT_MAILING_LIST=qa-team@example.com
+          if "%MAILING_LIST%"=="" set MAILING_LIST=
+
+      - name: Print environment variables
+        run: |
+          echo DIFIDO_URL=%DIFIDO_URL%
+          echo DIFIDO_HOST=%DIFIDO_HOST%
+          echo DIFIDO_PORT=%DIFIDO_PORT%
+          echo BUILD_USER=%BUILD_USER%
+          echo VERSION=%VERSION%
+          echo LEGACY=%LEGACY%
+          echo NODE_NAME=%NODE_NAME%
+          echo MAILING_LIST=%MAILING_LIST%
+          echo DEFAULT_MAILING_LIST=%DEFAULT_MAILING_LIST%
+
+      - name: Build Maven project
+        run: mvn clean install -Dmaven.test.skip=true
+
+      - name: Run Selenium tests
+        run: mvn -B clean test -Dheadless=true -Dbase.url=http://localhost:3000 -DsuiteXml=ui_tests
+
+      - name: List Allure results
+        run: dir "target\allure-results"
+        shell: cmd
+
+      - name: Create target folder if missing
+        run: |
+          if not exist target mkdir target
+
+      - name: Create Difido execution
+        shell: cmd
+        run: |
+          if "%DIFIDO_EXECUTION_ID%"=="-1" (
+            curl -s -X POST -H "Content-Type: application/json" ^
+              -d "{\"description\":\"UI Test Suite\",\"executionProperties\":{\"User\":\"%BUILD_USER%\",\"Version\":\"%VERSION%\",\"Legacy\":\"%LEGACY%\",\"Node\":\"%NODE_NAME%\"},\"shared\":true,\"forceNew\":true}" ^
+              "%DIFIDO_URL%/api/executions/" > EXECUTION_ID.txt
+            for /F "usebackq tokens=* delims=" %%i in ("EXECUTION_ID.txt") do set EXECUTION_ID=%%i
+            set EXECUTION_ID=!EXECUTION_ID:"=!
+            set EXECUTION_ID=!EXECUTION_ID: =!
+          ) else (
+            set EXECUTION_ID=%DIFIDO_EXECUTION_ID%
+          )
+          echo EXECUTION_ID=!EXECUTION_ID! > vars.txt
+
+      - name: Create remoteDifido.properties
+        shell: cmd
+        run: |
+          (
+            echo dont.compress.extensions=
+            echo port=%DIFIDO_PORT%
+            echo compress.files.above=5000
+            echo append.to.existing.execution=true
+            echo existing.execution.id=!EXECUTION_ID!
+            echo force.new.execution=false
+            echo enabled=true
+            echo execution.properties=User=%BUILD_USER%;Version=%VERSION%
+            echo host=%DIFIDO_HOST%
+            echo use.shared.execution=true
+          ) > remoteDifido.properties
+
+      - name: Post-test DIFIDO report setup
+        shell: cmd
+        run: |
+          if exist vars.txt (
+            for /f "usebackq tokens=1* delims==" %%A in ("vars.txt") do (
+              set "%%A=%%B"
+            )
+          )
+          set "EXECUTION_ID=%EXECUTION_ID:"=%"
+          set "EXECUTION_ID=%EXECUTION_ID: =%"
+          set "DIFIDO_REPORT_URL=%DIFIDO_URL%/reports/exec_%EXECUTION_ID%/index.html"
+          echo DIFIDO_REPORT_URL=%DIFIDO_REPORT_URL% >> vars.txt
+          echo Test Execution Report %DIFIDO_REPORT_URL% > anchorChain.tsv
+          if "%DIFIDO_EXECUTION_ID%"=="-1" (
+            curl -X PUT -H "Content-Type:text/plain" "%DIFIDO_URL%/api/executions/%EXECUTION_ID%?active=false"
+          )
+          echo Finished DIFIDO report setup.
+
+      - name: Upload Allure results to Allure Docker Service
+        shell: cmd
+        run: |
+          for %%f in (target\allure-results\*) do (
+            curl -X POST "%ALLURE_DOCKER_URL%/allure-docker-service/send-results?project_id=asher" -F "files[]=@%%f"
+          )
+
+      - name: Upload Allure and anchorChain artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-artifacts
+          path: |
+            target\allure-results
+            anchorChain.tsv
