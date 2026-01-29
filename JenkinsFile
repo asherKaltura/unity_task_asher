@@ -89,7 +89,7 @@ pipeline {
             echo 'Pipeline finished'
         }
         failure {
-            echo '⚠️ Tests failed'
+            echo ' Tests failed'
         }
     }
 }

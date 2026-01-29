@@ -20,7 +20,9 @@ public class DriverManager {
             switch (browser) {
                 case "chrome":
 
-                    WebDriverManager.chromedriver().setup();
+                    WebDriverManager.chromedriver().clearDriverCache().setup();
+
+
                     ChromeOptions chromeOptions = new ChromeOptions();
                     if (headless) {
                         chromeOptions.addArguments("--headless=new");
@@ -32,7 +34,7 @@ public class DriverManager {
                     break;
 
                 case "firefox":
-                    WebDriverManager.firefoxdriver().setup();
+                    WebDriverManager.firefoxdriver().clearDriverCache().setup();
                     FirefoxOptions firefoxOptions = new FirefoxOptions();
                     if (headless) {
                         firefoxOptions.addArguments("--headless");
@@ -41,7 +43,7 @@ public class DriverManager {
                     break;
 
                 case "edge":
-                    WebDriverManager.edgedriver().setup();
+                    WebDriverManager.edgedriver().clearDriverCache().setup();
                     EdgeOptions edgeOptions = new EdgeOptions();
                     if (headless) {
                         edgeOptions.addArguments("--headless=new");
@@ -50,7 +52,7 @@ public class DriverManager {
                     break;
 
                 default:
-                    WebDriverManager.chromedriver().setup();
+                    WebDriverManager.chromedriver().clearDriverCache().setup();
                     driver = new ChromeDriver();
             }
 
