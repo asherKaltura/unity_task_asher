@@ -38,6 +38,7 @@ public class UITests extends AbstractTestCase {
         postPage.clickAction(PostPage.PostAction.EDIT);
         postPage.changeStatus(PostPage.PostStatus.REMOVED);
         postPage.clickSave();
+
         postPage.filter().applyFilter(title, content);
         report.step("Post status should be REMOVED");
         assertion.verify(new AssertTrue(postPage.getValueByHeader("Status").equals(PostPage.PostStatus.REMOVED.name()), "Status == REMOVED"), false);
