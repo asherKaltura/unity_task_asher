@@ -10,8 +10,6 @@ import utils.ConfigReader;
 import utils.FakerUtils;
 import org.testng.annotations.Test;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 import static org.testng.Assert.assertEquals;
 import static utils.DriverManager.quitDriver;
