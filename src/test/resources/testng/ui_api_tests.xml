@@ -3,7 +3,7 @@
 <suite name="UI API Tests Suite">
     <test name="UI API Tests">
         <classes>
-            <class name="tests.UITests"/>
+            <class name="tests.UITestsPlaywright"/>
             <class name="tests.ApiTests"/>
         </classes>
     </test>
